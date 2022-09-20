@@ -85,6 +85,14 @@ public class ApiTests
         result.OfficeId.Should().Be(testEmployee.OfficeId);
     }
 
+    [Test]
+    public async Task GetShouldReturnNotFoundIfNotExisting()
+    {
+        var response = await client.GetAsync("/Employee/2");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
     private async Task InsertEmployeeWithId(int id, string firstName, string lastName, DateTime birthDate, int officeId)
     {
         using var database = databaseProvider.GetDatabase();

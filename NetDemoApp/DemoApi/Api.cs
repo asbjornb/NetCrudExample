@@ -17,7 +17,12 @@ internal static class Api
     {
         try
         {
-            return Results.Ok(await employeeRepository.GetEmployeeAsync(id));
+            var result = await employeeRepository.GetEmployeeAsync(id);
+            if (result == null)
+            {
+                return Results.NotFound();
+            }
+            return Results.Ok(result);
         }
         catch (Exception ex)
         {
