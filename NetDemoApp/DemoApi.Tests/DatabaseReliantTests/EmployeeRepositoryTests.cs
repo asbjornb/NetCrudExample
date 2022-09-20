@@ -41,6 +41,15 @@ public class EmployeeRepositoryTests
         await database.ExecuteAsync($"DELETE FROM {officeTable} WHERE Id>@0;", 1);
     }
 
+    [OneTimeTearDown]
+    public async Task OneTimeTearDown()
+    {
+        //Reset table after each test
+        using var database = databaseProvider.GetDatabase();
+        await database.ExecuteAsync($"TRUNCATE TABLE {employeeTable};");
+        await database.ExecuteAsync($"DELETE FROM {officeTable};");
+    }
+
     [Test]
     public async Task ShouldInsertNewEmployee()
     {
