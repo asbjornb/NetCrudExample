@@ -13,7 +13,7 @@ public class EmployeeRepositoryTests
 {
     private readonly string employeeTable = typeof(EmployeePoco).GetCustomAttribute<TableNameAttribute>().Value;
     private const string officeTable = "reg.Offices";
-    private EmployeeRepository sut;
+    private EmployeeSqlRepository sut;
     private DatabaseProvider databaseProvider;
 
     [OneTimeSetUp]
@@ -29,7 +29,7 @@ public class EmployeeRepositoryTests
     [SetUp]
     public void SetUp()
     {
-        sut = new EmployeeRepository(databaseProvider);
+        sut = new EmployeeSqlRepository(databaseProvider);
     }
 
     [TearDown]

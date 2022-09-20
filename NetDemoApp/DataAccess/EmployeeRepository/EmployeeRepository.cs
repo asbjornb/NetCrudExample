@@ -10,14 +10,14 @@ namespace DataAccess.EmployeeRepository;
 
 //We work with OfficeId's in this class but might as well use e.g. OfficeLocation and put a unique constraint on that
 //Maybe even introduce an enum to track locations if those are slow changing.
-public class EmployeeRepository
+public class EmployeeSqlRepository : IEmployeeRepository
 {
     private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
     private readonly string employeeTable = typeof(EmployeePoco).GetCustomAttribute<TableNameAttribute>()!.Value;
 
     private readonly DatabaseProvider databaseProvider;
 
-    public EmployeeRepository(DatabaseProvider databaseProvider)
+    public EmployeeSqlRepository(DatabaseProvider databaseProvider)
     {
         this.databaseProvider = databaseProvider;
     }
@@ -69,7 +69,7 @@ public class EmployeeRepository
             $", {nameof(EmployeePoco.LastName)}" +
             $", {nameof(EmployeePoco.Birthdate)}" +
             $", {nameof(EmployeePoco.OfficeId)}" +
-            $" FROM { employeeTable}" +
+            $" FROM {employeeTable}" +
             $" WHERE {nameof(EmployeePoco.Id)} = @0;";
 
         using var database = databaseProvider.GetDatabase();
@@ -77,7 +77,7 @@ public class EmployeeRepository
         {
             var result = await database.FetchAsync<EmployeePoco>(getQuery, id);
             var employee = result.SingleOrDefault();
-            if(employee is not null)
+            if (employee is not null)
             {
                 return FromPoco(employee);
             }
