@@ -116,6 +116,47 @@ public class EmployeeRepositoryTests
         result.Should().BeNull();
     }
 
+    [Test]
+    public async Task ShouldUpdateEmployeeIfExists()
+    {
+        var employee = new Employee(1, FirstName: "John", LastName: "Doe", Birthdate: new DateTime(1990, 1, 1), OfficeId: 1);
+
+        await InsertEmployeeWithId(employee.Id.Value, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId);
+        await InsertOffice(2, "AnotherOffice", 10);
+
+        var updatedEmployee = employee with { FirstName = "Jane", LastName = "Ford", Birthdate = new DateTime(1991, 2, 2), OfficeId = 2 };
+
+        var result = await sut.UpdateEmployeeAsync(updatedEmployee);
+
+        result.Should().BeTrue();
+        using var database = databaseProvider.GetDatabase();
+        var rows = database.Fetch<EmployeePoco>();
+        rows.Should().ContainSingle();
+        var row = rows.Single();
+        row.FirstName.Should().Be(updatedEmployee.FirstName);
+        row.LastName.Should().Be(updatedEmployee.LastName);
+        row.Birthdate.Should().Be(updatedEmployee.Birthdate);
+        row.OfficeId.Should().Be(2);
+    }
+
+    public async Task UpdateShouldReturnFalseIfEmployeeNotExists()
+    {
+        var employee = new Employee(1, "John", "Doe", new DateTime(1990, 1, 1), 1);
+
+        await InsertEmployeeWithId(1, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId);
+
+        var updatedEmployee = employee with { Id = 5, FirstName = "Jane" };
+
+        var result = await sut.UpdateEmployeeAsync(updatedEmployee);
+
+        result.Should().BeFalse();
+        using var database = databaseProvider.GetDatabase();
+        var rows = database.Fetch<EmployeePoco>();
+        rows.Should().ContainSingle();
+        var row = rows.Single();
+        row.FirstName.Should().Be(employee.FirstName);
+    }
+
     private async Task InsertEmployeeWithId(int id, string firstName, string lastName, DateTime birthDate, int officeId)
     {
         using var database = databaseProvider.GetDatabase();

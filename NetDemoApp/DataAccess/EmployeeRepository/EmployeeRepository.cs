@@ -90,6 +90,29 @@ public class EmployeeRepository
         }
     }
 
+    public async Task<bool> UpdateEmployeeAsync(Employee employee)
+    {
+        string updateQuery = $"UPDATE {employeeTable} " +
+            $"SET {nameof(EmployeePoco.FirstName)} = @0" +
+            $", {nameof(EmployeePoco.LastName)} = @1" +
+            $", {nameof(EmployeePoco.Birthdate)} = @2" +
+            $", {nameof(EmployeePoco.OfficeId)} = @3" +
+            $" WHERE {nameof(EmployeePoco.Id)} = @4;";
+
+        using var database = databaseProvider.GetDatabase();
+        try
+        {
+            var result = await database.ExecuteAsync(updateQuery, employee.FirstName, employee.LastName,
+                                                     employee.Birthdate, employee.OfficeId, employee.Id);
+            return result > 0;
+        }
+        catch (Exception)
+        {
+            Logger.Error("Error updating employee with database command {0}", database.LastCommand);
+            throw;
+        }
+    }
+
     private static Employee FromPoco(EmployeePoco poco)
     {
         return new Employee(poco.Id, poco.FirstName, poco.LastName, poco.Birthdate, poco.OfficeId);
