@@ -2,12 +2,12 @@
 
 namespace DataAccess;
 
-public class DatabaseProvider
+public class DatabaseProvider : IDatabaseProvider
 {
     private readonly string connectionString;
     private readonly string providerName;
 
-    public DatabaseProvider(string connectionString, string providerName="System.Data.SqlClient")
+    public DatabaseProvider(string connectionString, string providerName = "System.Data.SqlClient")
     {
         this.connectionString = connectionString;
         this.providerName = providerName;

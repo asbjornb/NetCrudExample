@@ -15,9 +15,9 @@ public class EmployeeSqlRepository : IEmployeeRepository
     private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
     private readonly string employeeTable = typeof(EmployeePoco).GetCustomAttribute<TableNameAttribute>()!.Value;
 
-    private readonly DatabaseProvider databaseProvider;
+    private readonly IDatabaseProvider databaseProvider;
 
-    public EmployeeSqlRepository(DatabaseProvider databaseProvider)
+    public EmployeeSqlRepository(IDatabaseProvider databaseProvider)
     {
         this.databaseProvider = databaseProvider;
     }
