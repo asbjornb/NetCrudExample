@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NLog" Version="5.0.4" />
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.524" />
   </ItemGroup>
 
@@ -15,4 +16,5 @@
       <_Parameter1>DemoApi.Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
+
 </Project>
