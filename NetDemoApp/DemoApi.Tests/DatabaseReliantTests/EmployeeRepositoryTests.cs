@@ -87,4 +87,40 @@ public class EmployeeRepositoryTests
         rows.Should().HaveCount(1);
         result.Should().Be(false);
     }
+
+    [Test]
+    public async Task ShouldGetEmployeeIfExists()
+    {
+        const int id = 1;
+        const string firstName = "John";
+        const string lastName = "Doe";
+        var birthDate = new DateTime(1990, 1, 1);
+        const int officeId = 1;
+        
+        using var database = databaseProvider.GetDatabase();
+        database.Execute("SET IDENTITY_INSERT reg.Employees ON; " +
+            "INSERT INTO reg.Employees(Id, FirstName, LastName, Birthdate, OfficeId) VALUES(@0, @1, @2, @3, @4); " +
+            "SET IDENTITY_INSERT reg.Employees OFF;", id, firstName, lastName, birthDate, officeId);
+
+        var result = await sut.GetEmployeeAsync(id);
+
+        result.Id.Should().Be(id);
+        result.FirstName.Should().Be(firstName);
+        result.LastName.Should().Be(lastName);
+        result.Birthdate.Should().Be(birthDate);
+        result.OfficeId.Should().Be(officeId);
+    }
+
+    [Test]
+    public async Task ShouldGetNullIfEmployeeNotExists()
+    {
+        using var database = databaseProvider.GetDatabase();
+        database.Execute("SET IDENTITY_INSERT reg.Employees ON; " +
+            "INSERT INTO reg.Employees(Id, FirstName, LastName, Birthdate, OfficeId) VALUES(@0, @1, @2, @3, @4); " +
+            "SET IDENTITY_INSERT reg.Employees OFF;", 1, "John", "Doe", new DateTime(1990, 1, 1), 1);
+
+        var result = await sut.GetEmployeeAsync(5);
+
+        result.Should().BeNull();
+    }
 }
