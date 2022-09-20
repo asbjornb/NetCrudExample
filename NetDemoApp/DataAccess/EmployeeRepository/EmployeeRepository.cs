@@ -1,6 +1,7 @@
 ﻿using DataAccess.Model;
 using NLog;
 using PetaPoco;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -28,9 +29,9 @@ public class EmployeeRepository
         using var database = databaseProvider.GetDatabase();
         try
         {
-            return await database.ExecuteAsync(insertQuery, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId);
+            return await database.ExecuteScalarAsync<int>(insertQuery, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId);
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             Logger.Error("Error inserting employee with database command {0}", database.LastCommand);
             throw;
