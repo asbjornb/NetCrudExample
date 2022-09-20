@@ -29,12 +29,7 @@ public class SetupDatabaseForTests
             .WithDatabase(configuration)
             .Build();
         await testDatabase.StartAsync();
-        ////Create a testDatabase
-        //using var defaultConnection = new SqlConnection(testDatabase.ConnectionString);
-        //defaultConnection.Open();
-        //using var createDatabaseCommand = new SqlCommand($"CREATE DATABASE {testDatabaseName};", defaultConnection);
-        //await createDatabaseCommand.ExecuteNonQueryAsync();
-        testDatabase.Database = testDatabaseName; //Use new test database rather than master
+        testDatabase.Database = testDatabaseName; //Connect to new test database rather than master
         //Deploy dacpac
         Deploy("./../../../../Registration/build/Registration.dacpac");
     }
