@@ -44,7 +44,7 @@ public class EmployeeRepositoryTests
     public async Task ShouldInsertNewEmployee()
     {
         var employee = new Employee(null, FirstName: "John", LastName: "Doe", Birthdate: new DateTime(1990, 1, 1), OfficeId: 1);
-        var result = await sut.InsertEmployee(employee);
+        var result = await sut.InsertEmployeeAsync(employee);
 
         using var database = databaseProvider.GetDatabase();
         var rows = database.Fetch<EmployeePoco>();
@@ -66,7 +66,7 @@ public class EmployeeRepositoryTests
             "INSERT INTO reg.Employees(Id, FirstName, LastName, Birthdate, OfficeId) VALUES(@0, @1, @2, @3, @4); " +
             "SET IDENTITY_INSERT reg.Employees OFF;", id, "John", "Doe", new DateTime(1990, 1, 1), 1);
 
-        var result = await sut.DeleteEmployee(id);
+        var result = await sut.DeleteEmployeeAsync(id);
 
         var rows = database.Fetch<EmployeePoco>();
         rows.Should().HaveCount(0);
@@ -81,7 +81,7 @@ public class EmployeeRepositoryTests
             "INSERT INTO reg.Employees(Id, FirstName, LastName, Birthdate, OfficeId) VALUES(@0, @1, @2, @3, @4); " +
             "SET IDENTITY_INSERT reg.Employees OFF;", 1, "John", "Doe", new DateTime(1990, 1, 1), 1);
 
-        var result = await sut.DeleteEmployee(5);
+        var result = await sut.DeleteEmployeeAsync(5);
 
         var rows = database.Fetch<EmployeePoco>();
         rows.Should().HaveCount(1);

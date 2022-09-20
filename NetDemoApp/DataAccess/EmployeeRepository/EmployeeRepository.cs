@@ -18,7 +18,7 @@ public class EmployeeRepository
         this.databaseProvider = databaseProvider;
     }
 
-    public async Task<int> InsertEmployee(Employee employee)
+    public async Task<int> InsertEmployeeAsync(Employee employee)
     {
         string insertQuery = $"INSERT INTO {employeeTable} ({nameof(EmployeePoco.FirstName)}" +
             $", {nameof(EmployeePoco.LastName)}" +
@@ -38,7 +38,7 @@ public class EmployeeRepository
         }
     }
 
-    public async Task<bool> DeleteEmployee(int id)
+    public async Task<bool> DeleteEmployeeAsync(int id)
     {
         //In practice it might be better with soft-deletes for a start, but from the spec this seems reasonable
         string deleteQuery = $"DELETE FROM {employeeTable} " +
