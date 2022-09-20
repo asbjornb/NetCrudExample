@@ -4,6 +4,7 @@ using DataAccess;
 using DataAccess.EmployeeRepository;
 using DataAccess.Model;
 using FluentAssertions;
+using NUnit.Framework;
 using PetaPoco;
 using System.Reflection;
 
@@ -15,16 +16,21 @@ public class EmployeeRepositoryTests
     private EmployeeRepository sut;
     private DatabaseProvider databaseProvider;
 
-    [SetUp]
-    public async Task SetUpAsync()
+    [OneTimeSetUp]
+    public async Task OneTimeSetUpAsync()
     {
         //Create repository with test-database-connection and default MS Sql provider
         databaseProvider = new DatabaseProvider(SetupDatabaseForTests.ConnectionString);
-        sut = new EmployeeRepository(databaseProvider);
 
         //Insert office for foreign key
         using var database = databaseProvider.GetDatabase();
         await database.ExecuteAsync("INSERT INTO reg.Offices(Location, MaxOccupancy) VALUES(@0, @1);", "TestOffice", 10);
+    }
+
+    [SetUp]
+    public void SetUp()
+    {
+        sut = new EmployeeRepository(databaseProvider);
     }
 
     [TearDown]
