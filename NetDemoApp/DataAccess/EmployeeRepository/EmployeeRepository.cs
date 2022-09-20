@@ -37,4 +37,23 @@ public class EmployeeRepository
             throw;
         }
     }
+
+    public async Task<bool> DeleteEmployee(int id)
+    {
+        //In practice it might be better with soft-deletes for a start, but from the spec this seems reasonable
+        string deleteQuery = $"DELETE FROM {employeeTable} " +
+            $"WHERE {nameof(EmployeePoco.Id)} = @0;";
+
+        using var database = databaseProvider.GetDatabase();
+        try
+        {
+            var result = await database.ExecuteAsync(deleteQuery, id);
+            return result > 0;
+        }
+        catch (Exception)
+        {
+            Logger.Error("Error deleting employee with database command {0}", database.LastCommand);
+            throw;
+        }
+    }
 }

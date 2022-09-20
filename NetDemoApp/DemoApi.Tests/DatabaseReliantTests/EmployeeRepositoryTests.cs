@@ -4,7 +4,6 @@ using DataAccess;
 using DataAccess.EmployeeRepository;
 using DataAccess.Model;
 using FluentAssertions;
-using NUnit.Framework;
 using PetaPoco;
 using System.Reflection;
 
@@ -42,7 +41,7 @@ public class EmployeeRepositoryTests
     }
 
     [Test]
-    public async Task ShouldInsertNewEmployeeAsync()
+    public async Task ShouldInsertNewEmployee()
     {
         var employee = new Employee(null, FirstName: "John", LastName: "Doe", Birthdate: new DateTime(1990, 1, 1), OfficeId: 1);
         var result = await sut.InsertEmployee(employee);
@@ -56,5 +55,36 @@ public class EmployeeRepositoryTests
         row.Birthdate.Should().Be(employee.Birthdate);
         row.OfficeId.Should().Be(1);
         result.Should().Be(row.Id);
+    }
+
+    [Test]
+    public async Task ShouldDeleteEmployee()
+    {
+        const int id = 1;
+        using var database = databaseProvider.GetDatabase();
+        database.Execute("SET IDENTITY_INSERT reg.Employees ON; " +
+            "INSERT INTO reg.Employees(Id, FirstName, LastName, Birthdate, OfficeId) VALUES(@0, @1, @2, @3, @4); " +
+            "SET IDENTITY_INSERT reg.Employees OFF;", id, "John", "Doe", new DateTime(1990, 1, 1), 1);
+
+        var result = await sut.DeleteEmployee(id);
+
+        var rows = database.Fetch<EmployeePoco>();
+        rows.Should().HaveCount(0);
+        result.Should().Be(true);
+    }
+
+    [Test]
+    public async Task ShouldNotDeleteOtherEmployees()
+    {
+        using var database = databaseProvider.GetDatabase();
+        database.Execute("SET IDENTITY_INSERT reg.Employees ON; " +
+            "INSERT INTO reg.Employees(Id, FirstName, LastName, Birthdate, OfficeId) VALUES(@0, @1, @2, @3, @4); " +
+            "SET IDENTITY_INSERT reg.Employees OFF;", 1, "John", "Doe", new DateTime(1990, 1, 1), 1);
+
+        var result = await sut.DeleteEmployee(5);
+
+        var rows = database.Fetch<EmployeePoco>();
+        rows.Should().HaveCount(1);
+        result.Should().Be(false);
     }
 }
