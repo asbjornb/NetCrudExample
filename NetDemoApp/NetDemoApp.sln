@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApi", "DemoApi\DemoApi.csproj", "{45D801F5-94DA-42D3-A8F7-767456CD9AB0}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Registration", "Registration\Registration.sqlproj", "{792F9898-2668-4BD6-9D0C-B0A70413E128}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,12 @@ Global
 		{45D801F5-94DA-42D3-A8F7-767456CD9AB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45D801F5-94DA-42D3-A8F7-767456CD9AB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45D801F5-94DA-42D3-A8F7-767456CD9AB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{792F9898-2668-4BD6-9D0C-B0A70413E128}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{792F9898-2668-4BD6-9D0C-B0A70413E128}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{792F9898-2668-4BD6-9D0C-B0A70413E128}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{792F9898-2668-4BD6-9D0C-B0A70413E128}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{792F9898-2668-4BD6-9D0C-B0A70413E128}.Release|Any CPU.Build.0 = Release|Any CPU
+		{792F9898-2668-4BD6-9D0C-B0A70413E128}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
