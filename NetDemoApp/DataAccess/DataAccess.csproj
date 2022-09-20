@@ -10,4 +10,9 @@
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.524" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>DemoApi.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>
