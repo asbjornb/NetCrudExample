@@ -115,6 +115,42 @@ public class ApiTests
         employeePoco.OfficeId.Should().Be(employee.OfficeId);
     }
 
+    [Test]
+    public async Task PutShouldUpdateUser()
+    {
+        //Insert a dummy to update
+        const int id = 2;
+        await InsertOffice(2, "TestOffice2", 10);
+        await InsertEmployeeWithId(id, testEmployee.FirstName, testEmployee.LastName
+            , testEmployee.Birthdate, testEmployee.OfficeId);
+        var updatedEmployee = new Employee(id, "Jane", "Doe", new DateTime(1980, 2, 3), 2);
+
+        var postContent = new StringContent(JsonConvert.SerializeObject(updatedEmployee), Encoding.UTF8, "application/json");
+        var response = await client.PutAsync("/Employees", postContent);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        
+        using var database = databaseProvider.GetDatabase();
+        var employees = await database.FetchAsync<EmployeePoco>("WHERE Id=@0;", id);
+        employees.Should().ContainSingle();
+        var employeePoco = employees.Single();
+        employeePoco.FirstName.Should().Be(updatedEmployee.FirstName);
+        employeePoco.LastName.Should().Be(updatedEmployee.LastName);
+        employeePoco.Birthdate.Should().Be(updatedEmployee.Birthdate);
+        employeePoco.OfficeId.Should().Be(updatedEmployee.OfficeId);
+    }
+
+    [Test]
+    public async Task PutShouldReturnNotFoundIfNotExisting()
+    {
+        var updatedEmployee = new Employee(5, "Jane", "Doe", new DateTime(1980, 2, 3), 2);
+
+        var postContent = new StringContent(JsonConvert.SerializeObject(updatedEmployee), Encoding.UTF8, "application/json");
+        var response = await client.PutAsync("/Employees", postContent);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
     private async Task InsertEmployeeWithId(int id, string firstName, string lastName, DateTime birthDate, int officeId)
     {
         using var database = databaseProvider.GetDatabase();

@@ -13,6 +13,7 @@ internal static class Api
     {
         app.MapGet("/Employee/{id}", GetEmployee);
         app.MapPost("/Employees", InsertEmployee);
+        app.MapPut("/Employees", UpdateEmployee);
     }
 
     private static async Task<IResult> GetEmployee(int id, IEmployeeRepository employeeRepository)
@@ -31,13 +32,30 @@ internal static class Api
             return Results.Problem(ex.Message);
         }
     }
-    
+
     private static async Task<IResult> InsertEmployee(Employee employee, IEmployeeRepository employeeRepository)
     {
         try
         {
             var result = await employeeRepository.InsertEmployeeAsync(employee);
             return Results.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    private static async Task<IResult> UpdateEmployee(Employee employee, IEmployeeRepository employeeRepository)
+    {
+        try
+        {
+            var result = await employeeRepository.UpdateEmployeeAsync(employee);
+            if (result)
+            {
+                return Results.Ok();
+            }
+            return Results.NotFound();
         }
         catch (Exception ex)
         {
