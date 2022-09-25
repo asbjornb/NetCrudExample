@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="NLog" Version="5.0.4" />
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.524" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 
   <ItemGroup>

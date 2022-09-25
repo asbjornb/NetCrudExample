@@ -143,7 +143,7 @@ public class ApiTests
     [Test]
     public async Task PutShouldReturnNotFoundIfNotExisting()
     {
-        var updatedEmployee = new Employee(5, "Jane", "Doe", new DateTime(1980, 2, 3), 2);
+        var updatedEmployee = new Employee(5, "Jane", "Doe", new DateTime(1980, 2, 3), 1);
 
         var postContent = new StringContent(JsonConvert.SerializeObject(updatedEmployee), Encoding.UTF8, "application/json");
         var response = await client.PutAsync("/Employees", postContent);

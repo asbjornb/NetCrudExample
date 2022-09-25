@@ -2,6 +2,7 @@
 using NLog;
 using PetaPoco;
 using System;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -24,16 +25,14 @@ public class EmployeeSqlRepository : IEmployeeRepository
 
     public async Task<int> InsertEmployeeAsync(ValidEmployee employee)
     {
-        string insertQuery = $"INSERT INTO {employeeTable} ({nameof(EmployeePoco.FirstName)}" +
-            $", {nameof(EmployeePoco.LastName)}" +
-            $", {nameof(EmployeePoco.Birthdate)}" +
-            $", {nameof(EmployeePoco.OfficeId)}) OUTPUT INSERTED.ID " +
-            "VALUES (@0, @1, @2, @3)";
-
+        var firstName = new SqlParameter("FirstName", employee.FirstName);
+        var lastName = new SqlParameter("LastName", employee.LastName);
+        var birthDate = new SqlParameter("Birthdate", employee.Birthdate);
+        var officeId = new SqlParameter("OfficeId", employee.OfficeId);
         using var database = databaseProvider.GetDatabase();
         try
         {
-            return await database.ExecuteScalarAsync<int>(insertQuery, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId);
+            return await database.ExecuteScalarProcAsync<int>("reg.InsertEmployee", firstName, lastName, birthDate, officeId);
         }
         catch (Exception)
         {
@@ -92,18 +91,15 @@ public class EmployeeSqlRepository : IEmployeeRepository
 
     public async Task<bool> UpdateEmployeeAsync(ValidEmployee employee)
     {
-        string updateQuery = $"UPDATE {employeeTable} " +
-            $"SET {nameof(EmployeePoco.FirstName)} = @0" +
-            $", {nameof(EmployeePoco.LastName)} = @1" +
-            $", {nameof(EmployeePoco.Birthdate)} = @2" +
-            $", {nameof(EmployeePoco.OfficeId)} = @3" +
-            $" WHERE {nameof(EmployeePoco.Id)} = @4;";
-
+        var id = new SqlParameter("Id", employee.Id);
+        var firstName = new SqlParameter("FirstName", employee.FirstName);
+        var lastName = new SqlParameter("LastName", employee.LastName);
+        var birthDate = new SqlParameter("Birthdate", employee.Birthdate);
+        var officeId = new SqlParameter("OfficeId", employee.OfficeId);
         using var database = databaseProvider.GetDatabase();
         try
         {
-            var result = await database.ExecuteAsync(updateQuery, employee.FirstName, employee.LastName,
-                                                     employee.Birthdate, employee.OfficeId, employee.Id);
+            var result = await database.ExecuteScalarProcAsync<int>("reg.UpdateEmployee", id, firstName, lastName, birthDate, officeId);
             return result > 0;
         }
         catch (Exception)
