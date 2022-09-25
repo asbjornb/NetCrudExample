@@ -1,8 +1,8 @@
 #nullable disable
 
 using DataAccess;
-using DataAccess.EmployeeRepository;
-using DataAccess.Model;
+using DemoApi.Employee.Model;
+using DemoApi.Employee.Repository;
 using FluentAssertions;
 using PetaPoco;
 using System.Reflection;
@@ -128,7 +128,7 @@ public class EmployeeRepositoryTests
     [Test]
     public async Task ShouldUpdateEmployeeIfExists()
     {
-        var employee = new Employee(1, FirstName: "John", LastName: "Doe", Birthdate: new DateTime(1990, 1, 1), OfficeId: 1);
+        var employee = new EmployeeModel(1, FirstName: "John", LastName: "Doe", Birthdate: new DateTime(1990, 1, 1), OfficeId: 1);
 
         await InsertEmployeeWithId(employee.Id.Value, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId);
         await InsertOffice(2, "AnotherOffice", 10);
@@ -151,7 +151,7 @@ public class EmployeeRepositoryTests
     [Test]
     public async Task UpdateShouldReturnFalseIfEmployeeNotExists()
     {
-        var employee = new Employee(1, "John", "Doe", new DateTime(1990, 1, 1), 1);
+        var employee = new EmployeeModel(1, "John", "Doe", new DateTime(1990, 1, 1), 1);
 
         await InsertEmployeeWithId(1, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId);
 

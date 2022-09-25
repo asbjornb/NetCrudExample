@@ -1,6 +1,6 @@
-using DataAccess;
-using DataAccess.EmployeeRepository;
-using DataAccess.Model;
+using DemoApi.Employee.Model;
+using DemoApi.Employee.Repository;
+using DemoApi.Employee.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -35,7 +35,7 @@ internal static class Api
         }
     }
 
-    private static async Task<IResult> InsertEmployee(Employee employee, IEmployeeValidator employeeValidator, IEmployeeRepository employeeRepository)
+    private static async Task<IResult> InsertEmployee(EmployeeModel employee, IEmployeeValidator employeeValidator, IEmployeeRepository employeeRepository)
     {
         try
         {
@@ -53,7 +53,7 @@ internal static class Api
         }
     }
 
-    private static async Task<IResult> UpdateEmployee(Employee employee, IEmployeeValidator employeeValidator, IEmployeeRepository employeeRepository)
+    private static async Task<IResult> UpdateEmployee(EmployeeModel employee, IEmployeeValidator employeeValidator, IEmployeeRepository employeeRepository)
     {
         try
         {

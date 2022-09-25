@@ -2,7 +2,7 @@
 using PetaPoco;
 using System;
 
-namespace DataAccess.EmployeeRepository;
+namespace DemoApi.Employee.Repository;
 
 [TableName("reg.Employees")]
 [PrimaryKey("Id", AutoIncrement = true)]

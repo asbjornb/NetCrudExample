@@ -1,4 +1,5 @@
-﻿using DataAccess.Model;
+﻿using DataAccess;
+using DemoApi.Employee.Model;
 using NLog;
 using PetaPoco;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace DataAccess.EmployeeRepository;
+namespace DemoApi.Employee.Repository;
 
 //We work with OfficeId's in this class but might as well use e.g. OfficeLocation and put a unique constraint on that
 //Maybe even introduce an enum to track locations if those are slow changing.

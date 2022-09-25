@@ -1,5 +1,5 @@
-using DataAccess;
-using DataAccess.Model;
+using DemoApi.Employee.Model;
+using DemoApi.Employee.Validation;
 using FluentAssertions;
 
 namespace DemoApi.Tests;
@@ -21,7 +21,7 @@ public class EmployeeValidatorTests
     [TestCase("  ", false)]
     public void ShouldValidateFirstName(string firstName, bool expectedResult)
     {
-        var employee = new Employee(null, firstName, "Doe", new DateTime(1990, 1, 1), 1);
+        var employee = new EmployeeModel(null, firstName, "Doe", new DateTime(1990, 1, 1), 1);
 
         var result = sut.Validate(employee);
 
@@ -36,7 +36,7 @@ public class EmployeeValidatorTests
     [TestCase("W. Bush", false)]
     public void ShouldValidateLastName(string lastName, bool expectedResult)
     {
-        var employee = new Employee(null, "John", lastName, new DateTime(1990, 1, 1), 1);
+        var employee = new EmployeeModel(null, "John", lastName, new DateTime(1990, 1, 1), 1);
 
         var result = sut.Validate(employee);
 
@@ -47,7 +47,7 @@ public class EmployeeValidatorTests
     [Test]
     public void ShouldValidateReasonableBirthDate()
     {
-        var employee = new Employee(null, "John", "Doe", new DateTime(1990, 1, 1), 1);
+        var employee = new EmployeeModel(null, "John", "Doe", new DateTime(1990, 1, 1), 1);
         var result = sut.Validate(employee);
         result.IsValid.Should().BeTrue();
     }
@@ -61,7 +61,7 @@ public class EmployeeValidatorTests
     [TestCase(-1, false)]
     public void ShouldValidateBirthDate(int yearsBack, bool expectedResult)
     {
-        var employee = new Employee(null, "John", "Doe", DateTime.Now.AddYears(-yearsBack), 1);
+        var employee = new EmployeeModel(null, "John", "Doe", DateTime.Now.AddYears(-yearsBack), 1);
         var result = sut.Validate(employee);
         result.IsValid.Should().Be(expectedResult);
         result.Errors.Any(x => x.Contains("Birthdate", StringComparison.InvariantCultureIgnoreCase)).Should().Be(!expectedResult);

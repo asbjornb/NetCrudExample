@@ -1,8 +1,8 @@
 #nullable disable
 
 using DataAccess;
-using DataAccess.EmployeeRepository;
-using DataAccess.Model;
+using DemoApi.Employee.Model;
+using DemoApi.Employee.Repository;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -20,7 +20,7 @@ public class ApiTests
 {
     private readonly string employeeTable = typeof(EmployeePoco).GetCustomAttribute<TableNameAttribute>().Value;
     private const string officeTable = "reg.Offices";
-    private readonly Employee testEmployee = new(1, "John", "Doe", new DateTime(2000, 1, 1), 1);
+    private readonly EmployeeModel testEmployee = new(1, "John", "Doe", new DateTime(2000, 1, 1), 1);
 
     private DatabaseProvider databaseProvider;
     private WebApplicationFactory<Program> appFactory;
@@ -78,7 +78,7 @@ public class ApiTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<Employee>(content);
+        var result = JsonConvert.DeserializeObject<EmployeeModel>(content);
         result.Id.Should().Be(testEmployee.Id);
         result.FirstName.Should().Be(testEmployee.FirstName);
         result.LastName.Should().Be(testEmployee.LastName);
@@ -97,7 +97,7 @@ public class ApiTests
     [Test]
     public async Task PostShouldInsertUser()
     {
-        var employee = new Employee(null, "Jane", "Doe", new DateTime(2000, 1, 1), 1);
+        var employee = new EmployeeModel(null, "Jane", "Doe", new DateTime(2000, 1, 1), 1);
         var postContent = new StringContent(JsonConvert.SerializeObject(employee), Encoding.UTF8, "application/json");
         var response = await client.PostAsync("/Employees", postContent);
 
@@ -123,7 +123,7 @@ public class ApiTests
         await InsertOffice(2, "TestOffice2", 10);
         await InsertEmployeeWithId(id, testEmployee.FirstName, testEmployee.LastName
             , testEmployee.Birthdate, testEmployee.OfficeId);
-        var updatedEmployee = new Employee(id, "Jane", "Doe", new DateTime(1980, 2, 3), 2);
+        var updatedEmployee = new EmployeeModel(id, "Jane", "Doe", new DateTime(1980, 2, 3), 2);
 
         var postContent = new StringContent(JsonConvert.SerializeObject(updatedEmployee), Encoding.UTF8, "application/json");
         var response = await client.PutAsync("/Employees", postContent);
@@ -143,7 +143,7 @@ public class ApiTests
     [Test]
     public async Task PutShouldReturnNotFoundIfNotExisting()
     {
-        var updatedEmployee = new Employee(5, "Jane", "Doe", new DateTime(1980, 2, 3), 1);
+        var updatedEmployee = new EmployeeModel(5, "Jane", "Doe", new DateTime(1980, 2, 3), 1);
 
         var postContent = new StringContent(JsonConvert.SerializeObject(updatedEmployee), Encoding.UTF8, "application/json");
         var response = await client.PutAsync("/Employees", postContent);

@@ -1,5 +1,6 @@
 using DataAccess;
-using DataAccess.EmployeeRepository;
+using DemoApi.Employee.Repository;
+using DemoApi.Employee.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataAccess.Model;
+namespace DemoApi.Employee.Model;
 
 public record ValidEmployee
 {
@@ -13,7 +13,7 @@ public record ValidEmployee
         OfficeId = officeId;
     }
 
-    internal ValidEmployee(Employee emp) : this(emp.Id, emp.FirstName, emp.LastName, emp.Birthdate, emp.OfficeId){}
+    internal ValidEmployee(EmployeeModel emp) : this(emp.Id, emp.FirstName, emp.LastName, emp.Birthdate, emp.OfficeId) { }
 
     public int? Id { get; init; }
     public string FirstName { get; init; }

@@ -1,7 +1,7 @@
-﻿using DataAccess.Model;
+﻿using DemoApi.Employee.Model;
 using System.Threading.Tasks;
 
-namespace DataAccess.EmployeeRepository;
+namespace DemoApi.Employee.Repository;
 
 public interface IEmployeeRepository
 {

@@ -1,9 +1,9 @@
-using DataAccess.Model;
+using DemoApi.Employee.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataAccess;
+namespace DemoApi.Employee.Validation;
 
 public class EmployeeValidator : IEmployeeValidator
 {
@@ -11,7 +11,7 @@ public class EmployeeValidator : IEmployeeValidator
     private const int MaxAge = 120;
 
     //Validate employee and return ValidationResult
-    public ValidationResult Validate(Employee employee)
+    public ValidationResult Validate(EmployeeModel employee)
     {
         var errors = new List<string>();
         //Validate that firstname is not empty
