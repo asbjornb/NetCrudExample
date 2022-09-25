@@ -12,7 +12,7 @@ namespace DemoApi.Employee.Repository;
 
 //We work with OfficeId's in this class but might as well use e.g. OfficeLocation and put a unique constraint on that
 //Maybe even introduce an enum to track locations if those are slow changing.
-public class EmployeeSqlRepository : IEmployeeRepository
+internal class EmployeeSqlRepository : IEmployeeRepository
 {
     private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
     private readonly string employeeTable = typeof(EmployeePoco).GetCustomAttribute<TableNameAttribute>()!.Value;

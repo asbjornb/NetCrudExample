@@ -2,7 +2,7 @@
 
 namespace DataAccess;
 
-public class DatabaseProvider : IDatabaseProvider
+internal class DatabaseProvider : IDatabaseProvider
 {
     private readonly string connectionString;
     private readonly string providerName;
