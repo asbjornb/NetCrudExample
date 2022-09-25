@@ -1,6 +1,7 @@
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.SqlServer.Dac;
 using System.Data.SqlClient;
 
@@ -9,43 +10,23 @@ namespace DemoApi.Tests.DatabaseReliantTests;
 [SetUpFixture]
 public class SetupDatabaseForTests
 {
-    private static TestcontainerDatabase testDatabase;
     private const string testDatabaseName = "DemoApiTests";
-    private static readonly MsSqlTestcontainerConfiguration configuration = new()
-    {
-        //For MsSql-testContainers can't set Database or Username.
-        //Database defaults to master, Username to sa
-        Password = "StrongPa$$word",
-    };
+    private const string dacPacPath = "./../../../../Registration/build/Registration.dacpac";
 
-    public static string ConnectionString => testDatabase.ConnectionString;
-    public static SqlConnection TestDatabaseConnection => new(testDatabase.ConnectionString);
+    public static string ConnectionString => $"Server=localhost;Database={testDatabaseName};Integrated Security=True;ApplicationIntent=ReadWrite";
+    public static SqlConnection TestDatabaseConnection => new(ConnectionString);
 
     [OneTimeSetUp]
-    public async Task OneTimeSetUpAsync()
+    public void OneTimeSetUp()
     {
-        //Create container and master database
-        testDatabase = new TestcontainersBuilder<MsSqlTestcontainer>()
-            .WithDatabase(configuration)
-            .Build();
-        await testDatabase.StartAsync();
-        testDatabase.Database = testDatabaseName; //Connect to new test database rather than master
         //Deploy dacpac
-        Deploy("./../../../../Registration/build/Registration.dacpac");
-    }
-
-    [OneTimeTearDown]
-    public async Task OneTimeTearDown()
-    {
-        await testDatabase.DisposeAsync();
-    }
-
-    private static void Deploy(string dacPacPath)
-    {
-        var dacOptions = new DacDeployOptions{ CreateNewDatabase = true};
-        var dacServiceInstance = new DacServices(testDatabase.ConnectionString);
+        var dacOptions = new DacDeployOptions { CreateNewDatabase = true };
+        var dacServiceInstance = new DacServices(ConnectionString);
 
         using DacPackage dacpac = DacPackage.Load(dacPacPath);
-        dacServiceInstance.Deploy(dacpac, testDatabaseName, upgradeExisting: false, options: dacOptions);
+        dacServiceInstance.Deploy(dacpac, testDatabaseName, upgradeExisting: true, options: dacOptions);
     }
+
+    //Could consider dropping database on OneTimeTearDown, but it can be nice enough to check state
+    //Could use sql in docker container for tests to simplify build pipelines but tests are slower
 }
