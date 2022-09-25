@@ -4,13 +4,18 @@ Minimal example of a simple Crud rest Api in C#
 
 ## Considerations and shortcomings
 
-* Repository:
+* Repository
   * Consider a Maybe/Option type return from the Get operation instead of a nullable
   * Consider using mutable Employee class and setting its Id on insert rather than just returning the Id
   * Could use interface with more generic data-language (save/load instead of insert/update/get) to support different storage mechanisms behind repo interface - in practice sql is standard for such repos.
   * Orm use would make repo code easier to read
   * Soft deletes would probably make more sense
   * In practice might not need to care about race conditions/concurrency in slow moving api, but they are definitely possible with the MaxOccupation condition
+
+* Api
+  * Should add documentation
+  * Should add better error messages
+  * Could consider only mapping set fields in PUT
 
 * Tests
   * Integration vs. unit tests. I personally prefer integration/end-to-end/functional over unit tests, but understand others prefer differently
@@ -33,5 +38,5 @@ Minimal example of a simple Crud rest Api in C#
   * If multiple and more complex models exist for interacting with the API consider putting these in a nuget package to share these model classes. That makes implementation of consumers easier and also better communicates "breaking" changes with semantic versioning for new api-versions.
   * Could consider using common libraries across projects to simplify e.g. validation.
 
-* Philosophical:
+* Philosophical
   * Primitive obsession - for a simple project like this it's probably fine, but the rules for birthdate, names etc. definitely calls for specific classes to guarantee validation need only be done once.
