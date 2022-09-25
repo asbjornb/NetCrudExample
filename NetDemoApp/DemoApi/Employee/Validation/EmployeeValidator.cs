@@ -42,6 +42,11 @@ public class EmployeeValidator : IEmployeeValidator
         return ValidationResult.Succes(employee);
     }
 
+    public ValidationResult Validate(NewEmployee employee)
+    {
+        return Validate(new EmployeeModel(null, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId));
+    }
+
     private static int GetAge(DateTime birthdate)
     {
         var today = DateTime.Today;

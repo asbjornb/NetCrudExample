@@ -97,7 +97,7 @@ public class ApiTests
     [Test]
     public async Task PostShouldInsertUser()
     {
-        var employee = new EmployeeModel(null, "Jane", "Doe", new DateTime(2000, 1, 1), 1);
+        var employee = new NewEmployee("Jane", "Doe", new DateTime(2000, 1, 1), 1);
         var postContent = new StringContent(JsonConvert.SerializeObject(employee), Encoding.UTF8, "application/json");
         var response = await client.PostAsync("/Employees", postContent);
 

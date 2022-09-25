@@ -35,7 +35,7 @@ internal static class Api
         }
     }
 
-    private static async Task<IResult> InsertEmployee(EmployeeModel employee, IEmployeeValidator employeeValidator, IEmployeeRepository employeeRepository)
+    private static async Task<IResult> InsertEmployee(NewEmployee employee, IEmployeeValidator employeeValidator, IEmployeeRepository employeeRepository)
     {
         try
         {
