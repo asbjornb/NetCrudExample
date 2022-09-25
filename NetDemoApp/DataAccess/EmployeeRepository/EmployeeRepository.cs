@@ -34,8 +34,12 @@ public class EmployeeSqlRepository : IEmployeeRepository
         {
             return await database.ExecuteScalarProcAsync<int>("reg.InsertEmployee", firstName, lastName, birthDate, officeId);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            if (e.Message.Contains("max occupancy"))
+            {
+                throw new InvalidOperationException(e.Message);
+            }
             Logger.Error("Error inserting employee with database command {0}", database.LastCommand);
             throw;
         }
@@ -102,8 +106,12 @@ public class EmployeeSqlRepository : IEmployeeRepository
             var result = await database.ExecuteScalarProcAsync<int>("reg.UpdateEmployee", id, firstName, lastName, birthDate, officeId);
             return result > 0;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            if (e.Message.Contains("max occupancy"))
+            {
+                throw new InvalidOperationException(e.Message);
+            }
             Logger.Error("Error updating employee with database command {0}", database.LastCommand);
             throw;
         }

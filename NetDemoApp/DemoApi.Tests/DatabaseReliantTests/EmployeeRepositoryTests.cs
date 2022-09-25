@@ -167,6 +167,38 @@ public class EmployeeRepositoryTests
         row.FirstName.Should().Be(employee.FirstName);
     }
 
+    [Test]
+    public async Task InsertShouldErrorIfMaxOccupancyReached()
+    {
+        //Insert 2 employees to reach max Occupancy
+        await InsertEmployeeWithId(1, "John", "Doe", new DateTime(1990, 1, 1), 1);
+        await InsertEmployeeWithId(2, "Jim", "Doe", new DateTime(1990, 1, 1), 1);
+
+        Func<Task> act = async () => await sut.InsertEmployeeAsync(new ValidEmployee(null, "Jeb", "Doe", new DateTime(1990, 1, 1), 1));
+        await act.Should().ThrowAsync<InvalidOperationException>();
+    }
+
+    [Test]
+    public async Task InsertShouldErrorIfOfficeIdDoesntExist()
+    {
+        Func<Task> act = async () => await sut.InsertEmployeeAsync(new ValidEmployee(null, "John", "Doe", new DateTime(1990, 1, 1), 2));
+        await act.Should().ThrowAsync<InvalidOperationException>();
+    }
+
+    [Test]
+    public async Task UpdateShouldErrorIfMaxOccupancyReached()
+    {
+        //Insert 2 employees to reach max Occupancy
+        await InsertEmployeeWithId(1, "John", "Doe", new DateTime(1990, 1, 1), 1);
+        await InsertEmployeeWithId(2, "Jim", "Doe", new DateTime(1990, 1, 1), 1);
+        //Insert another employee to a different office
+        await InsertOffice(2, "NewLargerOffice", 15);
+        await InsertEmployeeWithId(3, "Jeb", "Doe", new DateTime(1990, 1, 1), 2);
+
+        Func<Task> act = async () => await sut.UpdateEmployeeAsync(new ValidEmployee(3, "Jeb", "Doe", new DateTime(1990, 1, 1), 1));
+        await act.Should().ThrowAsync<InvalidOperationException>();
+    }
+
     private async Task InsertEmployeeWithId(int id, string firstName, string lastName, DateTime birthDate, int officeId)
     {
         using var database = databaseProvider.GetDatabase();

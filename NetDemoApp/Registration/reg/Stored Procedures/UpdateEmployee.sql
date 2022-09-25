@@ -21,7 +21,7 @@ BEGIN
     END
     ELSE
     BEGIN
-        RAISERROR('Max occupancy already reached for office with id %i. Failed to insert employee', 11, -1, @OfficeId)
+        RAISERROR('Failed to update employee. Bad data or max occupancy already reached for office with id %i.', 11, -1, @OfficeId)
 	END
     
     RETURN 0

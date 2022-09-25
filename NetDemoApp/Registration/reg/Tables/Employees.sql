@@ -8,3 +8,7 @@
     CONSTRAINT PK_Employees PRIMARY KEY CLUSTERED ([Id]),
     CONSTRAINT FK_EmployeeOffice FOREIGN KEY (OfficeId) REFERENCES [reg].[Offices]([Id]),
 );
+GO
+
+CREATE NONCLUSTERED INDEX NCIX_OfficeId ON [reg].[Employees]([OfficeId]);
+GO
