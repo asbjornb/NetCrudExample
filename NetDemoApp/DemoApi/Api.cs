@@ -1,4 +1,5 @@
 using DataAccess.EmployeeRepository;
+using DataAccess.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -11,6 +12,7 @@ internal static class Api
     public static void ConfigureApi(this WebApplication app)
     {
         app.MapGet("/Employee/{id}", GetEmployee);
+        app.MapPost("/Employees", InsertEmployee);
     }
 
     private static async Task<IResult> GetEmployee(int id, IEmployeeRepository employeeRepository)
@@ -22,6 +24,19 @@ internal static class Api
             {
                 return Results.NotFound();
             }
+            return Results.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+    
+    private static async Task<IResult> InsertEmployee(Employee employee, IEmployeeRepository employeeRepository)
+    {
+        try
+        {
+            var result = await employeeRepository.InsertEmployeeAsync(employee);
             return Results.Ok(result);
         }
         catch (Exception ex)

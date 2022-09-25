@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using PetaPoco;
 using System.Net;
 using System.Reflection;
+using System.Text;
 
 namespace DemoApi.Tests.DatabaseReliantTests;
 
@@ -91,6 +92,27 @@ public class ApiTests
         var response = await client.GetAsync("/Employee/2");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Test]
+    public async Task PostShouldInsertUser()
+    {
+        var employee = new Employee(null, "Jane", "Doe", new DateTime(2000, 1, 1), 1);
+        var postContent = new StringContent(JsonConvert.SerializeObject(employee), Encoding.UTF8, "application/json");
+        var response = await client.PostAsync("/Employees", postContent);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var content = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<int>(content);
+
+        using var database = databaseProvider.GetDatabase();
+        var employees = await database.FetchAsync<EmployeePoco>("WHERE Id=@0;", result);
+        employees.Should().ContainSingle();
+        var employeePoco = employees.Single();
+        employeePoco.FirstName.Should().Be(employee.FirstName);
+        employeePoco.LastName.Should().Be(employee.LastName);
+        employeePoco.Birthdate.Should().Be(employee.Birthdate);
+        employeePoco.OfficeId.Should().Be(employee.OfficeId);
     }
 
     private async Task InsertEmployeeWithId(int id, string firstName, string lastName, DateTime birthDate, int officeId)
