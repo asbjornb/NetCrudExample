@@ -14,6 +14,7 @@ internal static class Api
         app.MapGet("/Employee/{id}", GetEmployee);
         app.MapPost("/Employees", InsertEmployee);
         app.MapPut("/Employees", UpdateEmployee);
+        app.MapDelete("/Employees/{id}", DeleteEmployee);
     }
 
     private static async Task<IResult> GetEmployee(int id, IEmployeeRepository employeeRepository)
@@ -51,6 +52,23 @@ internal static class Api
         try
         {
             var result = await employeeRepository.UpdateEmployeeAsync(employee);
+            if (result)
+            {
+                return Results.Ok();
+            }
+            return Results.NotFound();
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    private static async Task<IResult> DeleteEmployee(int id, IEmployeeRepository employeeRepository)
+    {
+        try
+        {
+            var result = await employeeRepository.DeleteEmployeeAsync(id);
             if (result)
             {
                 return Results.Ok();

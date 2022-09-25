@@ -151,6 +151,31 @@ public class ApiTests
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
+    [Test]
+    public async Task DeleteShouldDeleteUser()
+    {
+        //Insert a dummy to update
+        const int id = 2;
+        await InsertEmployeeWithId(id, testEmployee.FirstName, testEmployee.LastName
+            , testEmployee.Birthdate, testEmployee.OfficeId);
+
+        var response = await client.DeleteAsync($"/Employees/{id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        using var database = databaseProvider.GetDatabase();
+        var employees = await database.FetchAsync<EmployeePoco>("WHERE Id=@0;", id);
+        employees.Should().BeEmpty();
+    }
+
+    [Test]
+    public async Task DeleteShouldReturnNotFoundIfNotExisting()
+    {
+        var response = await client.DeleteAsync("/Employees/5");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
     private async Task InsertEmployeeWithId(int id, string firstName, string lastName, DateTime birthDate, int officeId)
     {
         using var database = databaseProvider.GetDatabase();
