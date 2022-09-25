@@ -60,10 +60,13 @@
     <Folder Include="reg" />
     <Folder Include="Security\Schemas" />
     <Folder Include="reg\Tables" />
+    <Folder Include="reg\Stored Procedures" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\Schemas\reg.sql" />
     <Build Include="reg\Tables\Offices.sql" />
     <Build Include="reg\Tables\Employees.sql" />
+    <Build Include="reg\Stored Procedures\InsertEmployee.sql" />
+    <Build Include="reg\Stored Procedures\UpdateEmployee.sql" />
   </ItemGroup>
 </Project>
