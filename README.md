@@ -27,6 +27,10 @@ Minimal example of a simple Crud rest Api in C#
 
 * Configs/Environments/Security
   * Ideally sql connections are made with ad-users but other sensitive info should be stored in Azure Keyvault or similar. Otherwise at least make sure not to commit sensitive info to source control.
+  * Returning exceptions as api-error messages isn't great - but for an internal application it is fine for a demo imo.
+
+* Maintainability
+  * If multiple and more complex models exist for interacting with the API consider putting these in a nuget package to share these model classes. That makes implementation of consumers easier and also better communicates "breaking" changes with semantic versioning for new api-versions.
 
 * Philosophical:
-  * Primitive obsession
+  * Primitive obsession - for a simple project like this it's probably fine, but the rules for birthdate, names etc. definitely calls for specific classes to guarantee validation need only be done once.
