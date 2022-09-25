@@ -129,7 +129,7 @@ public class ApiTests
         var response = await client.PutAsync("/Employees", postContent);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         using var database = databaseProvider.GetDatabase();
         var employees = await database.FetchAsync<EmployeePoco>("WHERE Id=@0;", id);
         employees.Should().ContainSingle();

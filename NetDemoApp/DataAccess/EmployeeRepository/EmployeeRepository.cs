@@ -22,7 +22,7 @@ public class EmployeeSqlRepository : IEmployeeRepository
         this.databaseProvider = databaseProvider;
     }
 
-    public async Task<int> InsertEmployeeAsync(Employee employee)
+    public async Task<int> InsertEmployeeAsync(ValidEmployee employee)
     {
         string insertQuery = $"INSERT INTO {employeeTable} ({nameof(EmployeePoco.FirstName)}" +
             $", {nameof(EmployeePoco.LastName)}" +
@@ -62,7 +62,7 @@ public class EmployeeSqlRepository : IEmployeeRepository
     }
 
     //Ideally return Maybe<Employee> but not in scope imo.
-    public async Task<Employee?> GetEmployeeAsync(int id)
+    public async Task<ValidEmployee?> GetEmployeeAsync(int id)
     {
         string getQuery = $"SELECT {nameof(EmployeePoco.Id)}" +
             $", {nameof(EmployeePoco.FirstName)}" +
@@ -90,7 +90,7 @@ public class EmployeeSqlRepository : IEmployeeRepository
         }
     }
 
-    public async Task<bool> UpdateEmployeeAsync(Employee employee)
+    public async Task<bool> UpdateEmployeeAsync(ValidEmployee employee)
     {
         string updateQuery = $"UPDATE {employeeTable} " +
             $"SET {nameof(EmployeePoco.FirstName)} = @0" +
@@ -113,8 +113,8 @@ public class EmployeeSqlRepository : IEmployeeRepository
         }
     }
 
-    private static Employee FromPoco(EmployeePoco poco)
+    private static ValidEmployee FromPoco(EmployeePoco poco)
     {
-        return new Employee(poco.Id, poco.FirstName, poco.LastName, poco.Birthdate, poco.OfficeId);
+        return new ValidEmployee(poco.Id, poco.FirstName, poco.LastName, poco.Birthdate, poco.OfficeId);
     }
 }

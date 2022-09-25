@@ -19,6 +19,7 @@ public class Program
         var connectionString = builder.Configuration.GetConnectionString("AppDatabase");
         builder.Services.AddSingleton<IDatabaseProvider>(_ => new DatabaseProvider(connectionString));
         builder.Services.AddSingleton<IEmployeeRepository, EmployeeSqlRepository>();
+        builder.Services.AddSingleton<IEmployeeValidator, EmployeeValidator>();
 
         var app = builder.Build();
 

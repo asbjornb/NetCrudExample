@@ -1,3 +1,4 @@
+using DataAccess;
 using DataAccess.EmployeeRepository;
 using DataAccess.Model;
 using Microsoft.AspNetCore.Builder;
@@ -34,12 +35,17 @@ internal static class Api
         }
     }
 
-    private static async Task<IResult> InsertEmployee(Employee employee, IEmployeeRepository employeeRepository)
+    private static async Task<IResult> InsertEmployee(Employee employee, IEmployeeValidator employeeValidator, IEmployeeRepository employeeRepository)
     {
         try
         {
-            var result = await employeeRepository.InsertEmployeeAsync(employee);
-            return Results.Ok(result);
+            var validationResult = employeeValidator.Validate(employee);
+            if (validationResult.IsValid)
+            {
+                var result = await employeeRepository.InsertEmployeeAsync(validationResult.ValidEmployee!);
+                return Results.Ok(result);
+            }
+            return Results.BadRequest(validationResult.Errors);
         }
         catch (Exception ex)
         {
@@ -47,16 +53,21 @@ internal static class Api
         }
     }
 
-    private static async Task<IResult> UpdateEmployee(Employee employee, IEmployeeRepository employeeRepository)
+    private static async Task<IResult> UpdateEmployee(Employee employee, IEmployeeValidator employeeValidator, IEmployeeRepository employeeRepository)
     {
         try
         {
-            var result = await employeeRepository.UpdateEmployeeAsync(employee);
-            if (result)
+            var validationResult = employeeValidator.Validate(employee);
+            if (validationResult.IsValid)
             {
-                return Results.Ok();
+                var result = await employeeRepository.UpdateEmployeeAsync(validationResult.ValidEmployee!);
+                if (result)
+                {
+                    return Results.Ok();
+                }
+                return Results.NotFound();
             }
-            return Results.NotFound();
+            return Results.BadRequest(validationResult.Errors);
         }
         catch (Exception ex)
         {

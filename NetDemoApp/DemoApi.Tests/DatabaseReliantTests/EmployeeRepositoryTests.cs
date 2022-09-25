@@ -53,7 +53,7 @@ public class EmployeeRepositoryTests
     [Test]
     public async Task ShouldInsertNewEmployee()
     {
-        var employee = new Employee(null, FirstName: "John", LastName: "Doe", Birthdate: new DateTime(1990, 1, 1), OfficeId: 1);
+        var employee = new ValidEmployee(null, firstName: "John", lastName: "Doe", birthdate: new DateTime(1990, 1, 1), officeId: 1);
         var result = await sut.InsertEmployeeAsync(employee);
 
         using var database = databaseProvider.GetDatabase();
@@ -133,7 +133,7 @@ public class EmployeeRepositoryTests
         await InsertEmployeeWithId(employee.Id.Value, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId);
         await InsertOffice(2, "AnotherOffice", 10);
 
-        var updatedEmployee = employee with { FirstName = "Jane", LastName = "Ford", Birthdate = new DateTime(1991, 2, 2), OfficeId = 2 };
+        var updatedEmployee = new ValidEmployee(employee.Id, firstName: "Jane", lastName: "Ford", birthdate: new DateTime(1991, 2, 2), officeId: 2);
 
         var result = await sut.UpdateEmployeeAsync(updatedEmployee);
 
@@ -155,7 +155,7 @@ public class EmployeeRepositoryTests
 
         await InsertEmployeeWithId(1, employee.FirstName, employee.LastName, employee.Birthdate, employee.OfficeId);
 
-        var updatedEmployee = employee with { Id = 5, FirstName = "Jane" };
+        var updatedEmployee = new ValidEmployee(id: 5, firstName: "Jane", lastName: "Ford", birthdate: new DateTime(1991, 2, 2), officeId: 1);
 
         var result = await sut.UpdateEmployeeAsync(updatedEmployee);
 
