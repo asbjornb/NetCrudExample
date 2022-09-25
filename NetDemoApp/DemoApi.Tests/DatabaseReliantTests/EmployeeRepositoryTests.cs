@@ -148,6 +148,7 @@ public class EmployeeRepositoryTests
         row.OfficeId.Should().Be(2);
     }
 
+    [Test]
     public async Task UpdateShouldReturnFalseIfEmployeeNotExists()
     {
         var employee = new Employee(1, "John", "Doe", new DateTime(1990, 1, 1), 1);
