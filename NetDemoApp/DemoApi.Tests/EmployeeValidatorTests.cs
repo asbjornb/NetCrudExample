@@ -45,14 +45,6 @@ public class EmployeeValidatorTests
     }
 
     [Test]
-    public void ShouldValidateReasonableBirthDate()
-    {
-        var employee = new EmployeeModel(null, "John", "Doe", new DateTime(1990, 1, 1), 1);
-        var result = sut.Validate(employee);
-        result.IsValid.Should().BeTrue();
-    }
-
-    [Test]
     [TestCase(21, true)]
     [TestCase(62, true)]
     [TestCase(3, false)]
