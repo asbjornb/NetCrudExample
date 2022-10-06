@@ -41,7 +41,7 @@ internal class EmployeeSqlRepository : IEmployeeRepository
             {
                 throw new InvalidOperationException(e.Message);
             }
-            Logger.Error("Error inserting employee with database command {0}", database.LastCommand);
+            Logger.Warn("Error inserting employee with database command {0}", database.LastCommand);
             throw;
         }
     }
@@ -60,7 +60,7 @@ internal class EmployeeSqlRepository : IEmployeeRepository
         }
         catch (Exception)
         {
-            Logger.Error("Error deleting employee with database command {0}", database.LastCommand);
+            Logger.Warn("Error deleting employee with database command {0}", database.LastCommand);
             throw;
         }
     }
@@ -89,7 +89,7 @@ internal class EmployeeSqlRepository : IEmployeeRepository
         }
         catch (Exception)
         {
-            Logger.Error("Error fetching employee with database command {0}", database.LastCommand);
+            Logger.Warn("Error fetching employee with database command {0}", database.LastCommand);
             throw;
         }
     }
@@ -113,7 +113,7 @@ internal class EmployeeSqlRepository : IEmployeeRepository
             {
                 throw new InvalidOperationException(e.Message);
             }
-            Logger.Error("Error updating employee with database command {0}", database.LastCommand);
+            Logger.Warn("Error updating employee with database command {0}", database.LastCommand);
             throw;
         }
     }
